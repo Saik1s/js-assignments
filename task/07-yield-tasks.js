@@ -108,7 +108,7 @@ function* depthTraversalTree(root) {
       stack.push(...rootChildChildren.reverse());
     }
     yield rootChild;
-  }
+  };
 }
 
 
@@ -143,7 +143,7 @@ function* breadthTraversalTree(root) {
             queue.push(...rootChildChildren);
         }
         yield rootChild;
-    }
+    };
 }
 
 
@@ -161,7 +161,22 @@ function* breadthTraversalTree(root) {
  *   [ 1, 3, 5, ... ], [ -1 ] => [ -1, 1, 3, 5, ...]
  */
 function* mergeSortedSequences(source1, source2) {
-    throw new Error('Not implemented');
+    const iter1 = source1();
+    const iter2 = source2();
+
+    while(true){
+    const result1 = iter1.next();
+    const result2 = iter2.next();
+    
+        if(result1.done) {
+            yield result2.value;
+        } else if(result2.done) {
+            yield result1.value;
+        } else {
+            yield result1.value > result2.value ? result2.value : result1.value;
+            yield result1.value < result2.value ? result2.value : result1.value;
+        }
+    }
 }
 
 
