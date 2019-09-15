@@ -56,11 +56,8 @@ function parseDataFromIso8601(value) {
  *    Date(2015,1,1)    => false
  */
 function isLeapYear(date) {
-   if (date.getUTCFullYear()%4 == 0){
-      if (date.getUTCFullYear()%400 != 0 && date.getUTCFullYear()%100 == 0) // if the year is divisible by 4, by 100 but not by 400, then it is not a leap year
-         return false;
-      else 
-         return true; // if year is divisible by 4 and by 400, then it is a leap year
+   if (date.getUTCFullYear()%4 === 0){
+      return !(date.getUTCFullYear() % 400 !== 0 && date.getUTCFullYear() % 100 === 0); // if year is divisible by 4 and by 400, then it is a leap year
    }
    else
       return false; // the year is not divisible by 4 then it is not a leap year
