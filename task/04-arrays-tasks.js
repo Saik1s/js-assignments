@@ -224,7 +224,7 @@ function getTail(arr, n) {
 function toCsvText(arr) {
    const arrOfCsvText = arr.map((row) => {
       return row.join()
-                .concat('\n');    
+                .concat('\n');
    }).join('').slice(0, -1);
    return arrOfCsvText;
 }
@@ -658,7 +658,7 @@ function swapHeadAndTail(arr) {
    if(arr.length % 2 && arr.length > 1) {
       arr.push(arr[middle]);
       arr.splice(middle, 1);
-   };
+   }
    return [].concat.apply(arr, arr.splice(0, middle));
 }
 
