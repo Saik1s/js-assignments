@@ -54,12 +54,12 @@ function getCicleCircumference(radius) {
  *  -3, 3  => 0
  */
 function getAverage(value1, value2) {
-    let sum = value1 + value2;
+    const sum = value1 + value2;
     if(sum > Number.MAX_VALUE){
-        let temp1 = value1/Number.MAX_VALUE;
-        let temp2 = value2/Number.MAX_VALUE;
-        let average = (temp1 + temp2)/2;
-        return average*Number.MAX_VALUE;
+        const temp1 = value1/Number.MAX_VALUE;
+        const temp2 = value2/Number.MAX_VALUE;
+        const average = (temp1 + temp2)/2;
+        return average * Number.MAX_VALUE;
     }
     return sum/2;
 }
