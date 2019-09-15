@@ -201,7 +201,21 @@ function extractEmails(str) {
  *
  */
 function getRectangleString(width, height) {
-    return '┌' + '─'.repeat(width - 2) + '┐\n' + ('│' + ' '.repeat(width - 2) + '│\n').repeat(height - 2) + '└' + '─'.repeat(width - 2) + '┘\n';
+    const widthWithoutCorners = width - 2;
+    const heightWithoutCorners = height - 2;
+
+    const horizontalBorderWithoutCorners = '─'.repeat(widthWithoutCorners);
+    const emptySpaceWithoutCorners = ' '.repeat(widthWithoutCorners);
+
+    const topHorizontalBorder = `┌${horizontalBorderWithoutCorners}┐\n`;
+    const bottomHorizontalBorder = `└${horizontalBorderWithoutCorners}┘\n`;
+
+    const horizontalLineWithoutTBBorders = `│${emptySpaceWithoutCorners}│\n`;
+    const allHorizontalLinesWithoutTBBorders = horizontalLineWithoutTBBorders.repeat(heightWithoutCorners);
+
+    return topHorizontalBorder
+        + allHorizontalLinesWithoutTBBorders
+        + bottomHorizontalBorder ;
 }
 
 
@@ -221,10 +235,16 @@ function getRectangleString(width, height) {
  *
  */
 function encodeToRot13(str) {
-    let input = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-    let output = 'NOPQRSTUVWXYZABCDEFGHIJKLMnopqrstuvwxyzabcdefghijklm';
-    let index = x => input.indexOf(x);
-    let translate = x => index(x) > -1 ? output[index(x)] : x;
+    const input = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+    const output = 'NOPQRSTUVWXYZABCDEFGHIJKLMnopqrstuvwxyzabcdefghijklm';
+    const index = (x) => {
+        return input.indexOf(x);
+    };
+    const translate = (x) => {
+        return index(x) > -1
+            ? output[index(x)]
+            : x;
+    };
     return str.split('').map(translate).join('');
 }
 
@@ -272,9 +292,20 @@ function isString(value) {
  */
 function getCardId(value) {
     const col = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'], 
-    row = ['♣', '♦', '♥', '♠'], type = value.slice(-1), numb = value.slice(0, -1); 
+    row = ['♣', '♦', '♥', '♠'],
+        type = value.slice(-1),
+        numb = value.slice(0, -1);
+    const numberOfCards = 13;
 
-    return row.findIndex(x => x === type) * 13 + col.findIndex(x => x === numb); 
+    const suitOfCard = row.findIndex((x) => {
+        return x === type;
+    });
+
+    const valueOfCard = col.findIndex((x) => {
+        return x === numb;
+    });
+
+    return suitOfCard * numberOfCards + valueOfCard;
 }
 
 
