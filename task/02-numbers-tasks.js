@@ -22,7 +22,7 @@
  *   5, 5  => 25
  */
 function getRectangleArea(width, height) {
-    return width*height;
+    return width * height;
 }
 
 
@@ -38,7 +38,7 @@ function getRectangleArea(width, height) {
  *   0    => 0
  */
 function getCicleCircumference(radius) {
-    return Math.PI*2*radius;
+    return Math.PI * 2 * radius;
 }
 
 /**
@@ -54,14 +54,7 @@ function getCicleCircumference(radius) {
  *  -3, 3  => 0
  */
 function getAverage(value1, value2) {
-    const sum = value1 + value2;
-    if(sum > Number.MAX_VALUE){
-        const temp1 = value1/Number.MAX_VALUE;
-        const temp2 = value2/Number.MAX_VALUE;
-        const average = (temp1 + temp2)/2;
-        return average * Number.MAX_VALUE;
-    }
-    return sum/2;
+    return value1 / 2 + value2 / 2;
 }
 
 /**
@@ -80,7 +73,14 @@ function getAverage(value1, value2) {
  *   (-5,0) (10,-10) => 18.027756377319946
  */
 function getDistanceBetweenPoints(x1, y1, x2, y2) {
-    return Math.pow(Math.pow(Math.abs(x2 - x1),2)+Math.pow(Math.abs(y2 - y1), 2), 0.5)
+    const xLengthOfProjection = Math.abs(x2 - x1);
+    const xSquareOfProjectionLength = Math.pow(xLengthOfProjection,2);
+
+    const yLengthOfProjection = Math.abs(y2 - y1);
+    const ySquareOfProjectionLength = Math.pow(yLengthOfProjection, 2);
+
+
+    return Math.pow(xSquareOfProjectionLength + ySquareOfProjectionLength, 0.5);
 }
 
 /**
@@ -96,7 +96,7 @@ function getDistanceBetweenPoints(x1, y1, x2, y2) {
  *   5*x = 0         => 0
  */
 function getLinearEquationRoot(a, b) {
-    return -b/a;
+    return -b / a;
 }
 
 
@@ -118,7 +118,14 @@ function getLinearEquationRoot(a, b) {
  *   (0,1) (1,2)     => 0
  */
 function getAngleBetweenVectors(x1, y1, x2, y2) {
-    return Math.acos((x1*x2 + y1*y2)/Math.abs(y1-x1)*Math.abs(y2-x2)); // (x1*x2 + y1*y2) / (|y1-x1|*|y2-x2|);
+    const scalarProduct =(x1*x2 + y1*y2);
+    const productOfModules = Math.abs(y1 - x1) * Math.abs(y2 - x2);
+    return Math.acos(scalarProduct / productOfModules);
+
+    /**  (x1*x2 + y1*y2)
+    *---------------------
+    *  (|y1-x1|*|y2-x2|)
+     */
 }
 
 /**
@@ -134,7 +141,7 @@ function getAngleBetweenVectors(x1, y1, x2, y2) {
  *     0     => 0
  */
 function getLastDigit(value) {
-    return value%10;
+    return value % 10;
 }
 
 
@@ -167,7 +174,12 @@ function parseNumberFromString(value) {
  *   1,2,3   => 3.741657386773941
  */
 function getParallelipidedDiagonal(a,b,c) {
-    return Math.pow(Math.pow(a,2)+Math.pow(b,2)+Math.pow(c,2), 0.5);
+    const squareOfLength = Math.pow(a,2);
+    const squareOfWidth = Math.pow(b,2);
+    const squareOfHeight = Math.pow(c,2);
+    const sumOfSquares = squareOfLength + squareOfWidth + squareOfHeight;
+
+    return Math.pow(sumOfSquares, 0.5);
 }
 
 /**
@@ -188,7 +200,10 @@ function getParallelipidedDiagonal(a,b,c) {
  *   1678, 3  => 2000
  */
 function roundToPowerOfTen(num, pow) {
-    return (num/Math.pow(10, pow)).toFixed() * Math.pow(10, pow);
+    const numWithoutTens = (num / Math.pow(10, pow)).toFixed();
+    const numOfPowerOfTen = numWithoutTens * Math.pow(10, pow);
+
+    return numOfPowerOfTen;
 }
 
 /**
@@ -196,7 +211,7 @@ function roundToPowerOfTen(num, pow) {
  * See: https://en.wikipedia.org/wiki/Primality_test
  *
  * @param {number} n
- * @return {bool}
+ * @return {boolean}
  * 
  * @example:
  *   4 => false
@@ -209,8 +224,10 @@ function roundToPowerOfTen(num, pow) {
  *   17 => true
  */
 function isPrime(n) {
-    for(let i=2; i<n; i++){
-        if(n%i === 0) return false;
+    for(let i = 2; i < n; i++){
+        if(n % i === 0) {
+            return false;
+        }
     }
     return true;
 }
@@ -231,7 +248,7 @@ function isPrime(n) {
  *   toNumber(new Number(42), 0) => 42
  */
 function toNumber(value, def) {
-    return !isNaN(parseFloat(value)) && isFinite(value) ? value : def;
+    return isNaN(Number(value)) ? def : Number(value);
 }
 
 module.exports = {
