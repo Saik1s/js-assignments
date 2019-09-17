@@ -235,17 +235,12 @@ function getRectangleString(width, height) {
  *
  */
 function encodeToRot13(str) {
-    const input = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-    const output = 'NOPQRSTUVWXYZABCDEFGHIJKLMnopqrstuvwxyzabcdefghijklm';
-    const index = (x) => {
-        return input.indexOf(x);
-    };
-    const translate = (x) => {
-        return index(x) > -1
-            ? output[index(x)]
-            : x;
-    };
-    return str.split('').map(translate).join('');
+    const src   = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+    const dist  = 'NOPQRSTUVWXYZABCDEFGHIJKLMnopqrstuvwxyzabcdefghijklm';
+
+    return str.replace(/[A-Za-z]/g, (char) => {
+        return src.charAt(dist.indexOf(char));
+    });
 }
 
 /**
@@ -291,10 +286,10 @@ function isString(value) {
  *   'K♠' => 51
  */
 function getCardId(value) {
-    const col = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'], 
-    row = ['♣', '♦', '♥', '♠'],
-        type = value.slice(-1),
-        numb = value.slice(0, -1);
+    const col = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
+    const row = ['♣', '♦', '♥', '♠'];
+    const type = value.slice(-1);
+    const numb = value.slice(0, -1);
     const numberOfCards = 13;
 
     const suitOfCard = row.findIndex((x) => {
