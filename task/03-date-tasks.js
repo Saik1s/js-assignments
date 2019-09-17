@@ -115,11 +115,11 @@ function angleBetweenClockHands(date) {
 
     const angle = hoursRotationSpeed * hoursAngle - minutesAngle;
 
-    const AngleLessThen180 = (angle > 180)
+    const angleLessThen180 = (angle > 180)
         ? Math.abs(angle - 360 * Math.round(angle / 360))
         : angle;
 
-    const angleInRadians = AngleLessThen180 * Math.PI / 180;
+    const angleInRadians = angleLessThen180 * Math.PI / 180;
 
     return angleInRadians;
 }
