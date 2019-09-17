@@ -56,11 +56,12 @@ function parseDataFromIso8601(value) {
  *    Date(2015,1,1)    => false
  */
 function isLeapYear(date) {
-   if (date.getUTCFullYear()%4 === 0){
-      return !(date.getUTCFullYear() % 400 !== 0 && date.getUTCFullYear() % 100 === 0); // if year is divisible by 4 and by 400, then it is a leap year
-   }
-   else
-      return false; // the year is not divisible by 4 then it is not a leap year
+    const year = date.getFullYear();
+    const divisibleBy4 = year % 4 === 0;
+    const indivisibleBy100 = year % 100 !== 0;
+    const divisibleBy400 = year % 400 === 0;
+
+    return divisibleBy4 && indivisibleBy100 || divisibleBy400;
 }
 
 
@@ -80,7 +81,11 @@ function isLeapYear(date) {
  *    Date(2000,1,1,10,0,0),  Date(2000,1,1,15,20,10,453)   => "05:20:10.453"
  */
 function timeSpanToString(startDate, endDate) {
-   return new Date(endDate - startDate).toISOString().slice(11, -1);
+    const timespan = new Date(endDate - startDate);
+    const isoTimespan = timespan.toISOString(); //  "YYYY-MM-DDTHH:mm:ss.sssZ" -- ISOString,
+
+    return isoTimespan.slice(11, -1); // 11 is the number of characters meaning year, month, day,
+                                        // -1 meaning 'Z' character in the end of ISOString
 }
 
 
@@ -98,15 +103,25 @@ function timeSpanToString(startDate, endDate) {
  *    Date.UTC(2016,3,5,21, 0) => Math.PI/2
  */
 function angleBetweenClockHands(date) {
-   let hours = date.getUTCHours();
-   let minutes = date.getUTCMinutes();
-   let angle = 0.5 * (60* hours + minutes) - 0.5 * 12 * minutes;
-   if(angle > 180 && angle <= 540) 
-      return Math.abs(360 - angle) * Math.PI/180;
-   else if(angle > 540 && angle <= 900)
-      return Math.abs(720 - angle) * Math.PI/180;
-   else 
-      return angle * Math.PI/180;
+    const hours = date.getUTCHours();
+    const minutes = date.getUTCMinutes();
+
+    const secondsInOneMinute = 60;
+    const hoursRotationSpeed = 0.5;     //rotation speed of the hours hand (degrees per minute)
+    const minutesRotationSpeed  = 6;        //rotation speed of the minute hand (degrees per minute)
+
+    const hoursAngle = secondsInOneMinute * hours + minutes;
+    const minutesAngle = minutesRotationSpeed * minutes;
+
+    const angle = hoursRotationSpeed * hoursAngle - minutesAngle;
+
+    const AngleLessThen180 = (angle > 180)
+        ? Math.abs(angle - 360 * Math.round(angle / 360))
+        : angle;
+
+    const angleInRadians = AngleLessThen180 * Math.PI / 180;
+
+    return angleInRadians;
 }
 
 
