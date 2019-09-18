@@ -38,12 +38,12 @@ function findElement(arr, value) {
  *    5 => [ 1, 3, 5, 7, 9 ]
  */
 function generateOdds(len) {
-   const arrOfOddsNumbers = new Array(len)
-      .fill(1)
-      .map((value, index) => {
-         return value * (index * 2 + 1);
+   const arr = new Array(len);
+   const arrOfUnits = arr.fill(1);
+   const arrOfOdds = arrOfUnits.map((value, index) => {
+         return value * (index * 2 + 1); // odd number generation
        });
-   return arrOfOddsNumbers;
+   return arrOfOdds;
 }
 
 
@@ -223,9 +223,9 @@ function getTail(arr, n) {
  */
 function toCsvText(arr) {
    const arrOfCsvText = arr.map((row) => {
-      return row.join()
-                .concat('\n');
-   }).join('').slice(0, -1);
+      return row.join();
+   }).join('\n');
+
    return arrOfCsvText;
 }
 
@@ -304,10 +304,11 @@ function getSecondItems(arr) {
  *  [ 1,2,3,4,5 ] => [ 1, 2,2, 3,3,3, 4,4,4,4, 5,5,5,5,5 ]
  */
 function propagateItemsByPositionIndex(arr) {
-   const arrOfPropagateItems = [].concat.apply([],
-      arr.map((value, index) => {
-         return new Array(index + 1).fill(value);
-      }));
+   const multidimensionalArray = arr.map((value, index) => {
+      return new Array(index + 1).fill(value);
+   });
+   const arrOfPropagateItems = [].concat.apply([], multidimensionalArray);
+
    return arrOfPropagateItems;
 }
 
@@ -475,13 +476,17 @@ function toStringList(arr) {
  */
 function sortCitiesArray(arr) {
    const arrOfSortedCities = arr.sort((a, b) => {
+
       if(a.country > b.country) {
-         return 1;
-      } else if((a.country === b.country) && (a.city > b.city)) {
-         return 1;
-      } else {
+          return 1;
+      }
+
+       if((a.country === b.country) && (a.city > b.city)) {
+           return 1;
+       }
+
          return -1;
-   }});
+   });
    return arrOfSortedCities;
 }
 
@@ -504,13 +509,14 @@ function sortCitiesArray(arr) {
  *           [0,0,0,0,1]]   
  */
 function getIdentityMatrix(n) {
-   const matrix = new Array(n).fill(new Array(n).fill(0))
-   .map((arr, index) => {
-      return arr.map((_, x) => {
-         return x === index;
+   const matrix = Array(n).fill(Array(n).fill());
+
+   const identityMatrix = matrix.map((arr, rowIndex) => {
+      return arr.map((value, valueIndex) => {
+         return valueIndex === rowIndex ? 1 : 0;
       });
    });
-   return matrix;
+   return identityMatrix;
 }
 
 /**
@@ -527,10 +533,14 @@ function getIdentityMatrix(n) {
  *     3, 3   => [ 3 ]
  */
 function getIntervalArray(start, end) {
-   const intervalArray = new Array(end - start + 1).fill(start).map((value, index) => {
-      return value + index;
-   });
-   return intervalArray;
+    const lengthOfInterval = end - start + 1;
+    const intervalArray = new Array(lengthOfInterval);
+
+    const filledIntervalArray = intervalArray.fill(start).map((value, index) => {
+        return value + index;
+    });
+
+    return filledIntervalArray;
 }
 
 /**
@@ -582,17 +592,19 @@ function distinct(arr) {
  *   }
  */
 function group(array, keySelector, valueSelector) {
-   const map = new Map(array
-      .map(keySelector)
-      .map(keyElem => {
-         return [keyElem, array
-         .filter(value => {
-            return keySelector(value) === keyElem;
-         })
-         .map(valueSelector)];
-      })
-      );
-      return map;
+    const countriesArr = array.map(keySelector);
+
+     return new Map(countriesArr
+        .map((country) => {
+            return [country, getValuesArr(array, country)];
+        })
+    );
+
+    function getValuesArr(array, country){
+        return array.filter((objEl) => {
+            return keySelector(objEl) === country;
+        }).map(valueSelector);
+    }
 }
 
 
@@ -625,12 +637,10 @@ function selectMany(arr, childrenSelector) {
  *   [[[ 1, 2, 3]]], [ 0, 0, 1 ]      => 2        (arr[0][0][1])
  */
 function getElementByIndexes(arr, indexes) {
-   let deep = (array, index) => {
-         return index.length === 1 
-         ? array[index[0]]
-         : deep(array[index.shift()],index);
-   };
-   return deep(arr, indexes);
+    return (indexes.length === 1)
+         ? arr[indexes[0]]
+         : getElementByIndexes(arr[indexes.shift()], indexes);
+
 }
 
 
