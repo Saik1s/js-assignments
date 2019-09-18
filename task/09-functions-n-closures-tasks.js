@@ -27,7 +27,7 @@
  */
 function getComposition(f,g) {
     return (x) => {
-        f(g(x));
+        return f(g(x));
     };
 }
 
@@ -69,7 +69,14 @@ function getPowerFunction(exponent) {
  *   getPolynom()      => null
  */
 function getPolynom() {
-    throw new Error('Not implemented');
+    return (x) => {
+        const arrOfArguments = [...arguments].slice().reverse();
+        const polynom = arrOfArguments.reduce((acc, el, i) => {
+            return acc += el * Math.pow(x, i);
+        });
+
+        return polynom;
+    };
 }
 
 
