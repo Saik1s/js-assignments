@@ -59,7 +59,7 @@ function getJSON(obj) {
  */
 function fromJSON(proto, json) {
     const obj = JSON.parse(json);
-    
+
     return Object.setPrototypeOf(obj, proto);
 }
 
@@ -111,36 +111,75 @@ function fromJSON(proto, json) {
  *
  *  For more examples see unit tests.
  */
+class CssSelector {
+
+    constructor(value) {
+        this.selector = '';
+        this.type = 0;
+        this.uniqueError = "Element, id and pseudo-element should not occur more then one time inside the selector";
+        this.orderError = "Selector parts should be arranged in the following order: element, id, class, attribute, pseudo-class, pseudo-element";
+    }
+
+    element(value) {
+        this.checkType(1);
+        this.selector += value;
+        return this;
+    }
+
+    id(value) {
+        this.checkType(2);
+        this.selector += `#${value}`;
+        return this;
+    }
+
+    class(value) {
+        this.checkType(3);
+        this.selector += `.${value}`;
+        return this;
+    }
+
+    attr(value) {
+        this.checkType(4);
+        this.selector += `[${value}]`;
+        return this;
+    }
+
+    pseudoClass(value) {
+        this.checkType(5);
+        this.selector += `:${value}`;
+        return this;
+    }
+
+    pseudoElement(value) {
+        this.checkType(6);
+        this.selector += `::${value}`;
+        return this;
+    }
+
+    combine(selector1, combinator, selector2) {
+        this.selector = `${selector1.stringify()} ${combinator} ${selector2.stringify()}`;
+        return this;
+    }
+
+    stringify() {
+        return this.selector;
+    }
+
+    checkType(type) {
+        if (type < this.type) throw this.orderError;
+        if (type === this.type && [1,2,6].includes(type)) throw this.uniqueError;
+        this.type = type;
+    }
+}
 
 const cssSelectorBuilder = {
-
-    element: function(value) {
-        throw new Error('Not implemented');
-    },
-
-    id: function(value) {
-        throw new Error('Not implemented');
-    },
-
-    class: function(value) {
-        throw new Error('Not implemented');
-    },
-
-    attr: function(value) {
-        throw new Error('Not implemented');
-    },
-
-    pseudoClass: function(value) {
-        throw new Error('Not implemented');
-    },
-
-    pseudoElement: function(value) {
-        throw new Error('Not implemented');
-    },
-
-    combine: function(selector1, combinator, selector2) {
-        throw new Error('Not implemented');
-    },
+    element: value => new CssSelector().element(value),
+    id: value => new CssSelector().id(value),
+    class: value => new CssSelector().class(value),
+    attr: value => new CssSelector().attr(value),
+    pseudoClass: value => new CssSelector().pseudoClass(value),
+    pseudoElement: value => new CssSelector().pseudoElement(value),
+    combine: (s1, c, s2) => new CssSelector().combine(s1, c, s2)
 };
 
 
