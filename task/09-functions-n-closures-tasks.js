@@ -191,7 +191,7 @@ function partialUsingArguments(fn) {
     const curriedFunction = (...args) => {
         return fn(...fixedArgs, ...args);
     };
-    
+
     return curriedFunction;
 }
 
@@ -213,7 +213,7 @@ function partialUsingArguments(fn) {
  *   getId10() => 11
  */
 function getIdGeneratorFunction(startFrom) {
-    throw new Error('Not implemented');
+    return () => startFrom++;
 }
 
 
