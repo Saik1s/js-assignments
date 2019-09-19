@@ -187,7 +187,12 @@ function stringifiedArgs(args) {
  *   partialUsingArguments(fn, 'a','b','c','d')() => 'abcd'
  */
 function partialUsingArguments(fn) {
-    throw new Error('Not implemented');
+    const fixedArgs = Array.prototype.slice.call ( arguments , 1 );
+    const curriedFunction = (...args) => {
+        return fn(...fixedArgs, ...args);
+    };
+    
+    return curriedFunction;
 }
 
 
