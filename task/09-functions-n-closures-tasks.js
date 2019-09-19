@@ -96,7 +96,7 @@ function getPolynom() {
  */
 function memoize(func) {
     const cache = func();
-    
+
     return () => cache;
 }
 
@@ -117,7 +117,17 @@ function memoize(func) {
  * retryer() => 2
  */
 function retry(func, attempts) {
-    throw new Error('Not implemented');
+    const retryer = () => {
+        for (let i = 0; i <= attempts; i++) {
+            try {
+                return func();
+            } catch(err) {
+                if (i === attempts) throw err;
+            }
+        }
+    };
+
+    return retryer;
 }
 
 
@@ -145,9 +155,23 @@ function retry(func, attempts) {
  *
  */
 function logger(func, logFunc) {
-    throw new Error('Not implemented');
+
+    const result = (...args) => {
+        logFunc(`${func.name}(${stringifiedArgs(args)}) starts`);
+        logger.result = func(...args);
+        logFunc(`${func.name}(${stringifiedArgs(args)}) ends`);
+
+        return logger.result;
+    };
+
+    return result;
 }
 
+function stringifiedArgs(args) {
+    return args.map((arg) => {
+        return JSON.stringify(arg);
+    });
+}
 
 /**
  * Return the function with partial applied arguments
