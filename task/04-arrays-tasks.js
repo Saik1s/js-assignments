@@ -282,7 +282,7 @@ function getMovingSum(arr) {
  * [ "a" ] => []
  */
 function getSecondItems(arr) {
-   const arrOfSecondItems = arr.filter((_, index) => {
+   const arrOfSecondItems = arr.filter((value, index) => {
       return index % 2 === 1;
    });
    return arrOfSecondItems;
@@ -305,7 +305,7 @@ function getSecondItems(arr) {
  */
 function propagateItemsByPositionIndex(arr) {
    const multidimensionalArray = arr.map((value, index) => {
-      return new Array(index + 1).fill(value);
+      return (new Array(index + 1)).fill(value);
    });
    const arrOfPropagateItems = [].concat.apply([], multidimensionalArray);
 
@@ -477,15 +477,10 @@ function toStringList(arr) {
 function sortCitiesArray(arr) {
    const arrOfSortedCities = arr.sort((a, b) => {
 
-      if(a.country > b.country) {
-          return 1;
-      }
-
-       if((a.country === b.country) && (a.city > b.city)) {
-           return 1;
-       }
-
-         return -1;
+      return (a.country > b.country) ? 1
+          : (a.country === b.country && a.city > b.city)
+              ? 1
+              : -1
    });
    return arrOfSortedCities;
 }
@@ -509,7 +504,12 @@ function sortCitiesArray(arr) {
  *           [0,0,0,0,1]]   
  */
 function getIdentityMatrix(n) {
-   const matrix = Array(n).fill(Array(n).fill());
+   const matrix = Array.from({
+      // generate array of length n
+      length: n
+      // inside map function generate array of size n
+      // and fill it with '0'
+   }, () => (new Array(n)).fill(0));
 
    const identityMatrix = matrix.map((arr, rowIndex) => {
       return arr.map((value, valueIndex) => {
@@ -592,22 +592,22 @@ function distinct(arr) {
  *   }
  */
 function group(array, keySelector, valueSelector) {
-    const countriesArr = array.map(keySelector);
+    const arrOfKeys = array.map(keySelector);
 
-     return new Map(countriesArr
-        .map((country) => {
-            return [country, getValuesArr(array, country)];
-        })
-    );
+    const mappedArray = arrOfKeys
+        .map((key) => {
+           const values = getValuesArr(array, key, keySelector, valueSelector);
+           return [key, values];
+        });
 
-    function getValuesArr(array, country){
-        return array.filter((objEl) => {
-            return keySelector(objEl) === country;
-        }).map(valueSelector);
-    }
+     return new Map(mappedArray);
 }
 
-
+function getValuesArr(array, key, keySelector, valueSelector){
+   return array.filter((objEl) => {
+      return keySelector(objEl) === key;
+   }).map(valueSelector);
+}
 /**
  * Projects each element of the specified array to a sequence and flattens the resulting sequences into one array.
  *
@@ -637,10 +637,12 @@ function selectMany(arr, childrenSelector) {
  *   [[[ 1, 2, 3]]], [ 0, 0, 1 ]      => 2        (arr[0][0][1])
  */
 function getElementByIndexes(arr, indexes) {
-    return (indexes.length === 1)
-         ? arr[indexes[0]]
-         : getElementByIndexes(arr[indexes.shift()], indexes);
+   const currentIndex = indexes[0];
+   const followingIndexes = indexes.slice(1);
 
+   return (indexes.length === 1)
+       ? arr[currentIndex]
+       : getElementByIndexes(arr[currentIndex], followingIndexes)
 }
 
 
@@ -663,13 +665,20 @@ function getElementByIndexes(arr, indexes) {
  * 
  */
 function swapHeadAndTail(arr) {
-   const middle = Math.floor(arr.length / 2);
+   const indexOfMiddleEl = Math.floor(arr.length / 2);
 
-   if(arr.length % 2 && arr.length > 1) {
-      arr.push(arr[middle]);
-      arr.splice(middle, 1);
+   if(arr.length > 1 && arr.length % 2) {
+
+      const head = arr.slice(0, indexOfMiddleEl);
+      const tail = arr.slice(-indexOfMiddleEl);
+      const middleValue = arr[indexOfMiddleEl];
+
+      return [...tail, middleValue, ...head];
    }
-   return [].concat.apply(arr, arr.splice(0, middle));
+   
+   const head = arr.splice(0, indexOfMiddleEl);
+
+   return [].concat.apply(arr, head);
 }
 
 
