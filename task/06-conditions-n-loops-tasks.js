@@ -79,7 +79,7 @@ function getFactorial(n) {
 function getSumBetweenNumbers(n1, n2) {
     const length = n2 - n1 + 1;
 
-    const sequence = Array(length).fill(n1)
+    const sequence = (new Array(length)).fill(n1)
         .map((value, index) => {
             return (n1 + index);
         });
@@ -312,13 +312,17 @@ function isCreditCardNumber(ccn) {
     const stringCCN = [...ccn.toString()].reverse();
 
     const modifiedCCN = stringCCN.map((value, index) => {
-        if (index % 2) {                     //  double every second number
-            if (value * 2 > 9) {                 //  and if it is more than 9- subtract 9
-                return value * 2 - 9;
-            }
-            return value * 2;
+        const isOddNumber = !(index % 2);
+
+        if (isOddNumber) {
+            return value;
         }
-        return value;
+
+        if (value * 2 > 9) {
+            return value * 2 - 9;
+        }
+
+        return value * 2;
     });
 
     const checksum = modifiedCCN.reduce((result, value) => {
@@ -344,14 +348,14 @@ function isCreditCardNumber(ccn) {
  *   165536 (1+6+5+5+3+6 = 26,  2+6 = 8) => 8
  */
 function getDigitalRoot(num) {
-    const arrOfCharNum = num.toString().split('');
-    const arrOfNumbers = arrOfCharNum.map((char) => {
+    const arrOfCharNum  = num.toString().split('');     //  the number is converted to a string and split into characters
+    const arrOfNumbers = arrOfCharNum.map((char) => {     //  array of characters is converted to array of numbers
         return +char;
     });
-    const sumOfNumbers = arrOfNumbers.reduce((acc, curr) => {
+    const sumOfAllDigits = arrOfNumbers.reduce((acc, curr) => {     // the sum of all digits in the number that was passed to the function
         return acc + curr;
     });
-    return sumOfNumbers.toString().length > 1 ? getDigitalRoot(sumOfNumbers) : sumOfNumbers;
+    return sumOfAllDigits.toString().length > 1 ? getDigitalRoot(sumOfAllDigits) : sumOfAllDigits;
 }
 
 
@@ -382,14 +386,16 @@ function isBracketsBalanced(str) {
     const stack = [];
 
     for (let i = 0; i < str.length; i++) {
-        if (closing.includes(str[i])) {
-            const matchingOpening = opening[closing.indexOf(str[i])];
 
-            if (!stack.length || (stack.pop() !== matchingOpening)) {
-                return false;
-            }
-        } else {
+        if (closing.indexOf(str[i]) === -1) {
             stack.push(str[i]);
+            continue;
+        }
+
+        const matchingOpening = opening[closing.indexOf(str[i])];
+
+        if (!stack.length || (stack.pop() !== matchingOpening)) {
+            return false;
         }
     }
 
@@ -437,38 +443,67 @@ function timespanToHumanString(startDate, endDate) {
             : Math.floor(value);
     };
 
-    if (timeDiff <= 45) {
+    const timeEnum = {
+        MINUTE: 60,
+
+        MINUTE_AND_HALF: 90,
+        FORTY_FIVE_MINUTES: 45 * 60,
+        NINETY_MINUTES: 90 * 60,
+
+        HOUR: 3600,
+
+        TWENTY_TWO_HOURS: 22 * 3600,
+        THIRTY_SIX_HOURS: 36 * 3600,
+
+        DAY: 3600 * 24,
+
+        TWENTY_FIVE_DAYS: 25 * 24 * 3600,
+
+        MONTH: 30 * 24 * 3600,
+
+        FORTY_FIVE_DAYS: 45 * 24 * 3600,
+
+        THREE_HUNDRED_FORTY_FIVE_DAYS: 345 * 24 * 3600,
+
+        YEAR: 365 * 24 * 3600,
+
+        FIVE_HUNDRED_FORTY_FIVE_DAYS: 545 * 24 * 3600,
+        FIVE_HUNDRED_FORTY_SIX_DAYS: 546 * 24 * 3600,
+    };
+
+
+    if (timeDiff <= timeEnum.MINUTE * 3 / 4) {      // 3/4 of a minute = 45 sec
         return 'a few seconds ago';
     }
-    if (timeDiff <= 90) {
+    if (timeDiff <= timeEnum.MINUTE_AND_HALF) {
         return 'a minute ago';
     }
-    if (timeDiff <= 45 * 60) {
-        return `${dif(timeDiff / 60)} minutes ago`;
+    if (timeDiff <= timeEnum.FORTY_FIVE_MINUTES) {
+        return `${dif(timeDiff / timeEnum.MINUTE)} minutes ago`;
     }
-    if (timeDiff <= 90 * 60) {
+    if (timeDiff <= timeEnum.NINETY_MINUTES) {
         return 'an hour ago';
     }
-    if (timeDiff <= 22 * 3600) {
-        return `${dif(timeDiff / 3600)} hours ago`;
+    if (timeDiff <= timeEnum.TWENTY_TWO_HOURS) {
+        return `${dif(timeDiff / timeEnum.HOUR)} hours ago`;
     }
-    if (timeDiff <= 3600 * 36) {
+    if (timeDiff <= timeEnum.THIRTY_SIX_HOURS) {
         return 'a day ago';
     }
-    if (timeDiff <= 3600 * 24 * 25) {
-        return `${dif(timeDiff / 3600 / 24)} days ago`;
+    if (timeDiff <= timeEnum.TWENTY_FIVE_DAYS) {
+        return `${dif(timeDiff / timeEnum.DAY)} days ago`;
     }
-    if (timeDiff <= 3600 * 24 * 45) {
+    if (timeDiff <= timeEnum.FORTY_FIVE_DAYS) {
         return 'a month ago';
     }
-    if (timeDiff <= 3600 * 24 * 345) {
-        return `${dif(timeDiff / 3600 / 24 / 30)} months ago`;
+    if (timeDiff <= timeEnum.THREE_HUNDRED_FORTY_FIVE_DAYS) {
+        return `${dif(timeDiff / timeEnum.MONTH)} months ago`;
     }
-    if (timeDiff <= 3600 * 24 * 545) {
+    if (timeDiff <= timeEnum.FIVE_HUNDRED_FORTY_FIVE_DAYS) {
         return 'a year ago';
     }
-    if (timeDiff >= 3600 * 24 * 546) {
-        return `${dif(timeDiff / 3600 / 24 / 365)} years ago`;
+    if (timeDiff >= timeEnum.FIVE_HUNDRED_FORTY_SIX_DAYS) {
+        return `${dif(timeDiff / timeEnum.YEAR)} years ago`;
     }
 }
 
@@ -522,14 +557,12 @@ function getCommonDirectoryPath(pathes) {
             return x[i] === splittedPath[0][i];
         });
 
-        if (matchingPath) {
-            result += splittedPath[0][i].concat('/');
-        } else {
-            break;
+        if (!matchingPath) {
+            return result;
         }
-    }
 
-    return result;
+        result += splittedPath[0][i].concat('/');
+    }
 }
 
 
@@ -616,9 +649,8 @@ function evaluateTicTacToePosition(position) {
         [2, 4, 6]];     //  winning combinations
 
     for (let i = 0; i < 3; i++) {
-        if (position[i].length < 3) {
-            for (let j = 0; j < 3 - position[i].length; j++)
-                position[i].push(null);
+        for (let j = 0; j < 3 - position[i].length; j++) {
+            position[i].push(null);
         }
     }
 
