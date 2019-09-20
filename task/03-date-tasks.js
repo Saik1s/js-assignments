@@ -57,11 +57,11 @@ function parseDataFromIso8601(value) {
  */
 function isLeapYear(date) {
     const year = date.getFullYear();
-    const divisibleBy4 = year % 4 === 0;
-    const indivisibleBy100 = year % 100 !== 0;
-    const divisibleBy400 = year % 400 === 0;
+    const yearMultipleOf4 = year % 4 === 0;
+    const yearNotMultipleOf100 = year % 100 !== 0;
+    const yearMultipleOf400 = year % 400 === 0;
 
-    return divisibleBy4 && indivisibleBy100 || divisibleBy400;
+    return yearMultipleOf4 && yearNotMultipleOf100 || yearMultipleOf400;
 }
 
 
@@ -109,17 +109,18 @@ function angleBetweenClockHands(date) {
     const secondsInOneMinute = 60;
     const hoursRotationSpeed = 0.5;     //rotation speed of the hours hand (degrees per minute)
     const minutesRotationSpeed  = 6;        //rotation speed of the minute hand (degrees per minute)
+    const fullAngle = 360;
 
     const hoursAngle = secondsInOneMinute * hours + minutes;
     const minutesAngle = minutesRotationSpeed * minutes;
 
     const angle = hoursRotationSpeed * hoursAngle - minutesAngle;
 
-    const angleLessThen180 = (angle > 180)
-        ? Math.abs(angle - 360 * Math.round(angle / 360))
+    const convexAngle = (angle > 180)
+        ? Math.abs(angle - fullAngle * Math.round(angle / fullAngle))   // bringing an angle to a convex angle
         : angle;
 
-    const angleInRadians = angleLessThen180 * Math.PI / 180;
+    const angleInRadians = convexAngle * Math.PI / 180;
 
     return angleInRadians;
 }
