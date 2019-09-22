@@ -434,76 +434,73 @@ function isBracketsBalanced(str) {
  *   Date('2000-01-01 01:00:00.100'), Date('2015-01-02 03:00:05.000')  => '15 years ago'
  *
  */
+
+function dif(value) {
+    return (value > Math.floor(value) + 0.5)
+        ? Math.round(value)
+        : Math.floor(value);
+}
+
+const TimeEnum = {
+    SecondsInMinute: 60,
+
+    //MinuteAndHalf: 90,
+    //SecIn45Minutes: 45 * 60,
+    //SecIn90Minutes: 90 * 60,
+
+    SecondsInHour: 3600,
+
+    //SecIn22Hours: 22 * 3600,
+    //SecIn36Hours: 36 * 3600,
+
+    SecondsInDay: 3600 * 24,
+
+    //SecIn25Days: 25 * 24 * 3600,
+
+    SecondsInMonth: 30 * 24 * 3600,
+
+    //SecIn45Days: 45 * 24 * 3600,
+
+    //SecIn345Days: 345 * 24 * 3600,
+
+    SecondsInYear: 365 * 24 * 3600,
+};
+
 function timespanToHumanString(startDate, endDate) {
     const timeDiff = (endDate - startDate) / 1000;
 
-    const dif = (value) => {
-        return (value > Math.floor(value) + 0.5)
-            ? Math.round(value)
-            : Math.floor(value);
-    };
-
-    const timeEnum = {
-        MINUTE: 60,
-
-        MINUTE_AND_HALF: 90,
-        FORTY_FIVE_MINUTES: 45 * 60,
-        NINETY_MINUTES: 90 * 60,
-
-        HOUR: 3600,
-
-        TWENTY_TWO_HOURS: 22 * 3600,
-        THIRTY_SIX_HOURS: 36 * 3600,
-
-        DAY: 3600 * 24,
-
-        TWENTY_FIVE_DAYS: 25 * 24 * 3600,
-
-        MONTH: 30 * 24 * 3600,
-
-        FORTY_FIVE_DAYS: 45 * 24 * 3600,
-
-        THREE_HUNDRED_FORTY_FIVE_DAYS: 345 * 24 * 3600,
-
-        YEAR: 365 * 24 * 3600,
-
-        FIVE_HUNDRED_FORTY_FIVE_DAYS: 545 * 24 * 3600,
-        FIVE_HUNDRED_FORTY_SIX_DAYS: 546 * 24 * 3600,
-    };
-
-
-    if (timeDiff <= timeEnum.MINUTE * 3 / 4) {      // 3/4 of a minute = 45 sec
+    if (timeDiff <= TimeEnum.SecondsInMinute * 3 / 4) {      // 3/4 of a minute = 45 sec
         return 'a few seconds ago';
     }
-    if (timeDiff <= timeEnum.MINUTE_AND_HALF) {
+    if (timeDiff <= TimeEnum.SecondsInMinute + 30) {        // 30 - seconds, result = minute and half (90sec)
         return 'a minute ago';
     }
-    if (timeDiff <= timeEnum.FORTY_FIVE_MINUTES) {
-        return `${dif(timeDiff / timeEnum.MINUTE)} minutes ago`;
+    if (timeDiff <= TimeEnum.SecondsInMinute * 45) {        // 45 minutes
+        return `${dif(timeDiff / TimeEnum.SecondsInMinute)} minutes ago`;
     }
-    if (timeDiff <= timeEnum.NINETY_MINUTES) {
+    if (timeDiff <= TimeEnum.SecondsInMinute * 90) {        //90 minute
         return 'an hour ago';
     }
-    if (timeDiff <= timeEnum.TWENTY_TWO_HOURS) {
-        return `${dif(timeDiff / timeEnum.HOUR)} hours ago`;
+    if (timeDiff <= TimeEnum.SecondsInHour * 22) {      // 22 hours
+        return `${dif(timeDiff / TimeEnum.SecondsInHour)} hours ago`;
     }
-    if (timeDiff <= timeEnum.THIRTY_SIX_HOURS) {
+    if (timeDiff <= TimeEnum.SecondsInHour * 36) {      // 36 hours
         return 'a day ago';
     }
-    if (timeDiff <= timeEnum.TWENTY_FIVE_DAYS) {
-        return `${dif(timeDiff / timeEnum.DAY)} days ago`;
+    if (timeDiff <= TimeEnum.SecondsInDay * 25) {       // 25 days
+        return `${dif(timeDiff / TimeEnum.SecondsInDay)} days ago`;
     }
-    if (timeDiff <= timeEnum.FORTY_FIVE_DAYS) {
+    if (timeDiff <= TimeEnum.SecondsInDay * 45) {       // 45 days
         return 'a month ago';
     }
-    if (timeDiff <= timeEnum.THREE_HUNDRED_FORTY_FIVE_DAYS) {
-        return `${dif(timeDiff / timeEnum.MONTH)} months ago`;
+    if (timeDiff <= TimeEnum.SecondsInDay * 345) {      // 345 days
+        return `${dif(timeDiff / TimeEnum.SecondsInMonth)} months ago`;
     }
-    if (timeDiff <= timeEnum.FIVE_HUNDRED_FORTY_FIVE_DAYS) {
+    if (timeDiff <= TimeEnum.SecondsInDay  * 545) {      // 545 days
         return 'a year ago';
     }
-    if (timeDiff >= timeEnum.FIVE_HUNDRED_FORTY_SIX_DAYS) {
-        return `${dif(timeDiff / timeEnum.YEAR)} years ago`;
+    if (timeDiff >= TimeEnum.SecondsInDay * 546) {       // 546 days
+        return `${dif(timeDiff / TimeEnum.SecondsInYear)} years ago`;
     }
 }
 
