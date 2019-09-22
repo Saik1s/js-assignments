@@ -166,8 +166,12 @@ class CssSelector {
     }
 
     checkType(type) {
-        if (type < this.type) throw this.orderError;
-        if (type === this.type && [1,2,6].includes(type)) throw this.uniqueError;
+        if (type < this.type) {
+            throw new Error(this.orderError);
+        }
+        if (type === this.type && [1,2,6].indexOf(type) !== -1) {
+            throw new Error(this.uniqueError);
+        }
         this.type = type;
     }
 }
