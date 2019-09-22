@@ -664,18 +664,24 @@ function getElementByIndexes(arr, indexes) {
 function swapHeadAndTail(arr) {
    const indexOfMiddleEl = Math.floor(arr.length / 2);
 
-   if(arr.length > 1 && arr.length % 2) {
+   if(arr.length === 1){
+       return arr;
+   }
 
+   if(arr.length > 1 && arr.length % 2) {
       const head = arr.slice(0, indexOfMiddleEl);
       const tail = arr.slice(-indexOfMiddleEl);
       const middleValue = arr[indexOfMiddleEl];
 
       return [...tail, middleValue, ...head];
    }
-   
-   const head = arr.splice(0, indexOfMiddleEl);
 
-   return [].concat.apply(arr, head);
+   const head = arr.slice(0, indexOfMiddleEl);
+   const result = arr
+       .slice(indexOfMiddleEl)
+       .concat(head);
+
+    return result;
 }
 
 
