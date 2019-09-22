@@ -33,7 +33,7 @@
  *
  */
 function* get99BottlesOfBeer() {
-    for(let i = 99; i > 2; i--){
+    for (let i = 99; i > 2; i--) {
         yield `${i} bottles of beer on the wall, ${i} bottles of beer.`;
 
         yield `Take one down and pass it around, ${i - 1} bottles of beer on the wall.`;
@@ -59,7 +59,7 @@ function* get99BottlesOfBeer() {
  */
 function* getFibonacciSequence() {
     let curr = 1;
-    for(let prev = 0; prev < Number.MAX_SAFE_INTEGER; ){
+    for (let prev = 0; prev < Number.MAX_SAFE_INTEGER;) {
         const next = prev + curr;
         yield prev;
         prev = curr;
@@ -99,16 +99,16 @@ function* getFibonacciSequence() {
  *
  */
 function* depthTraversalTree(root) {
-    const stack=[root];
+    const stack = [root];
 
-  while(stack.length !== 0){
-    const rootChild = stack.pop();
-    const rootChildChildren = rootChild.children;
-    if(rootChildChildren){
-      stack.push(...rootChildChildren.reverse());
+    while (stack.length !== 0) {
+        const rootChild = stack.pop();
+        const rootChildChildren = rootChild.children;
+        if (rootChildChildren) {
+            stack.push(...rootChildChildren.reverse());
+        }
+        yield rootChild;
     }
-    yield rootChild;
-  };
 }
 
 
@@ -135,15 +135,15 @@ function* depthTraversalTree(root) {
  */
 function* breadthTraversalTree(root) {
     const queue = [root];
-    let node = 0;
-    while(node < queue.length) {
-        const rootChild = queue[node++];
-        const rootChildChildren = rootChild.children;
-        if(rootChildChildren) {
-            queue.push(...rootChildChildren);
+
+    for (let node of queue) {
+
+        yield node;
+
+        if (node.children) {
+            queue.push(...node.children);
         }
-        yield rootChild;
-    };
+    }
 }
 
 
