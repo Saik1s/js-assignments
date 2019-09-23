@@ -327,7 +327,7 @@ function propagateItemsByPositionIndex(arr) {
  *   [ 10, 10, 10, 10 ] => [ 10, 10, 10 ]
  */
 function get3TopItems(arr) {
-   const arrOf3TopItems = arr.sort((a, b) => {
+   const arrOf3TopItems = arr.concat().sort((a, b) => {
       return a > b ? -1 : 1;
    }).slice(0, 3);
    return arrOf3TopItems;
