@@ -156,10 +156,14 @@ function retry(func, attempts) {
  */
 function logger(func, logFunc) {
 
-    const result = (...args) => {
-        logFunc(`${func.name}(${stringifiedArgs(args)}) starts`);
-        logger.result = func(...args);
-        logFunc(`${func.name}(${stringifiedArgs(args)}) ends`);
+    const result = function() {
+        let array = [].slice.call(arguments);
+
+        logFunc(`${func.name}(${stringifiedArgs(array)}) starts`);
+        const str = typeof array[0];
+        //logger.result = (typeof array[0] !== "object") ? func(array) : func([].slice.call(array[0],0));
+        logger.result = func(array);        // TODO FIX SECOND TEST
+        logFunc(`${func.name}(${stringifiedArgs(array)}) ends`);
 
         return logger.result;
     };
