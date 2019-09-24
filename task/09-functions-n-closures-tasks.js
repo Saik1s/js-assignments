@@ -160,7 +160,7 @@ function logger(func, logFunc) {
         let array = [].slice.call(arguments);
 
         logFunc(`${func.name}(${stringifiedArgs(array)}) starts`);
-        const result = func(...array);
+        const result = func.apply(this, array);
         logFunc(`${func.name}(${stringifiedArgs(array)}) ends`);
 
         return result;
