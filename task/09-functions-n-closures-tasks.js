@@ -160,12 +160,10 @@ function logger(func, logFunc) {
         let array = [].slice.call(arguments);
 
         logFunc(`${func.name}(${stringifiedArgs(array)}) starts`);
-        const str = typeof array[0];
-        //logger.result = (typeof array[0] !== "object") ? func(array) : func([].slice.call(array[0],0));
-        logger.result = func(array);        // TODO FIX SECOND TEST
+        const result = func(...array);
         logFunc(`${func.name}(${stringifiedArgs(array)}) ends`);
 
-        return logger.result;
+        return result;
     };
 
     return result;
